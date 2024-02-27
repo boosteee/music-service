@@ -1,0 +1,46 @@
+version: '3.7'
+
+services:
+  server:
+    build:
+      context: ./cw-server
+      dockerfile: Dockerfile
+    image: sw-server
+    container_name: sw-node-server
+    command: /usr/src/app/node_modules/.bin/nodemon server.js
+    volumes:
+      - ./server/:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - '5000:5000'
+    env_file: ./cw-server/.env
+    environment:
+      - NODE_ENV=development
+    networks:
+      - app-network
+  client:
+    build:
+      context: ./cw-client
+      dockerfile: Dockerfile
+    image: cw-client
+    container_name: cw-react-client
+    command: npm start
+    volumes:
+      - ./client/:/usr/app
+      - /usr/app/node_modules
+    depends_on:
+      - server
+    ports:
+      - '3000:3000'
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  data-volume:
+  node_modules:
+  web-root:
+    driver: local
