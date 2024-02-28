@@ -32,7 +32,7 @@ import { AlbumService } from '@/services/album.service';
 import { useInput } from '@/hooks/useInput';
 
 const AddTrackForm: React.FC<AddAlbumFormProps> = ({ setCreated }) => {
-  const [tracks, setTracks] = useState<ITrack[]>([]);
+  const [, setTracks] = useState<ITrack[]>([]);
   const [albums, setAlbums] = useState<IAlbum[]>([]);
   const [value, setValue] = useState('');
   const [open, setOpen] = useState(false);

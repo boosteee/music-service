@@ -29,8 +29,8 @@ interface AlbumSongProps {
 
 const AlbumSong: React.FC<AlbumSongProps> = ({ track }) => {
   const [playlists, setPlaylists] = useState<IPlaylist[]>([]);
-  const { playTrack, pauseTrack, setActiveTrack } = useActions();
-  const { active, pause } = useTypedSelector((state) => state.player);
+  const { pauseTrack, setActiveTrack } = useActions();
+  const { active } = useTypedSelector((state) => state.player);
   const [duration, setDuration] = useState<number | undefined>();
 
   useEffect(() => {

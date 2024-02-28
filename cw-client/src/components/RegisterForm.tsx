@@ -6,7 +6,6 @@ import { LoginService } from '@/services/login.service';
 import { IUserRegisterData } from '@/types/user';
 import { useInput } from '@/hooks/useInput';
 import { useToast } from './ui/use-toast';
-import { Toaster } from './ui/toaster';
 import { useEffect, useState } from 'react';
 
 const RegisterForm = ({

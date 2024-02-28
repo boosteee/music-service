@@ -15,7 +15,6 @@ import AdminAlbumPage from './pages/AdminAlbumPage';
 import AdminArtistPage from './pages/AdminArtistPage';
 import AdminTrackPage from './pages/AdminTrackPage';
 import AdminUserPage from './pages/AdminUserPage';
-import { Toaster } from './components/ui/toaster';
 
 function App() {
   return (

@@ -34,8 +34,8 @@ const ArtistSong: React.FC<ArtistSongProps> = ({ track }) => {
     navigate(`/albums/${albumId}`);
   };
   const [duration, setDuration] = useState<number | undefined>();
-  const { playTrack, pauseTrack, setActiveTrack } = useActions();
-  const { active, pause } = useTypedSelector((state) => state.player);
+  const { pauseTrack, setActiveTrack } = useActions();
+  const { active } = useTypedSelector((state) => state.player);
 
   useEffect(() => {
     const filePathOnServer = `${BASE_URL}/${track.track}`;

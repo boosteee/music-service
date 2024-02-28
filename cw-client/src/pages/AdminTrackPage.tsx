@@ -20,10 +20,9 @@ import AddTrackForm from '../components/forms/AddTrackForm';
 
 const AdminTrackPage = () => {
   const [tracks, setTracks] = useState<ITrack[]>([]);
-  const [genres, setGenres] = useState<IGenre[]>([]);
+  const [, setGenres] = useState<IGenre[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [value, setValue] = useState('');
-  const [open, setOpen] = useState(false);
+  const [value] = useState('');
   const [created, setCreated] = useState<boolean>(false);
 
   const getTrack = async () => {

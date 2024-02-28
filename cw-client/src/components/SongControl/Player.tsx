@@ -27,14 +27,8 @@ const Player = () => {
 
   const navigate = useNavigate();
 
-  const {
-    pauseTrack,
-    playTrack,
-    setVolume,
-    setCurrentTime,
-    setDuration,
-    setActiveTrack,
-  } = useActions();
+  const { pauseTrack, playTrack, setVolume, setCurrentTime, setDuration } =
+    useActions();
 
   const [track, setTrack] = useState<ITrack | undefined>();
 

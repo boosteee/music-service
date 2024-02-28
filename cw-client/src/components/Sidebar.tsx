@@ -1,20 +1,7 @@
 import { cn } from '@/lib/utils';
 import { Button } from './ui/button';
-import { ScrollArea } from './ui/scroll-area';
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from '@/components/ui/context-menu';
 import { Library, ListMusic, Mic2, Search, Star } from 'lucide-react';
-import { useContext, useMemo, useState } from 'react';
-import { AuthContext } from './AuthProvider';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { PlaylistService } from '@/services/playlist.service';
-import { IPlaylist } from '@/types/playlist';
-import PlaylistPage from '../pages/PlaylistPage';
-import { Separator } from './ui/separator';
+import { useNavigate } from 'react-router-dom';
 
 export function Sidebar({}) {
   const navigate = useNavigate();

@@ -31,8 +31,8 @@ const PlaylistSong: React.FC<PlaylistSongProps> = ({
   setDeleted,
 }) => {
   const navigate = useNavigate();
-  const { playTrack, pauseTrack, setActiveTrack } = useActions();
-  const { active, pause } = useTypedSelector((state) => state.player);
+  const { pauseTrack, setActiveTrack } = useActions();
+  const { active } = useTypedSelector((state) => state.player);
   const [duration, setDuration] = useState<number | undefined>();
 
   useEffect(() => {
