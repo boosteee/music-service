@@ -3,6 +3,7 @@ import { HydratedDocument } from 'mongoose';
 import { Track } from 'src/track/schemas/track.schema';
 import * as mongoose from 'mongoose';
 import { Playlist } from 'src/playlist/schemas/playlist.schema';
+import { Artist } from 'src/artist/schemas/artist.schema';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -25,6 +26,9 @@ export class User {
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Playlist' }] })
   playlists: Playlist[];
+
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Artist' }] })
+  subscriptions: Artist[];
 }
 
 export enum Roles {

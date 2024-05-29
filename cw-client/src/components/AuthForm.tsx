@@ -35,16 +35,14 @@ export function AuthForm({
       email: email.value,
       password: password.value,
     };
-    console.log(user);
 
     try {
       const data = await LoginService.login(user);
       if (data) {
         localStorage.setItem('user', JSON.stringify(data));
       }
-      console.log(JSON.parse(localStorage.getItem('user') ?? '{}'));
       setUserData(data);
-      console.log(data);
+
       navigate('/playlists');
     } catch (error: any) {
       if (error.response && error.response.status === 404) {
@@ -69,7 +67,6 @@ export function AuthForm({
   useEffect(() => {
     if (password.value && email.value) {
       setDisabled(false);
-      console.log(disabled);
     } else {
       setDisabled(true);
     }

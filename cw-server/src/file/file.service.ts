@@ -7,9 +7,8 @@ export enum FileType {
   AUDIO = 'audio',
   IMAGE = 'image',
 }
-export
 @Injectable()
-class FileService {
+export class FileService {
   createFile(type: FileType, file): string {
     try {
       const fileExtension = file.originalname.split('.').pop();

@@ -32,14 +32,13 @@ const PlaylistPage = () => {
   if (!loggedUser) {
     return <Navigate to='/login' />;
   }
-  const { user } = loggedUser;
 
   const fetchPlaylist = async () => {
     try {
       const data = await PlaylistService.getPlaylistDetails(playlistId);
-      console.log(data);
       setPlaylist(data);
       setDeleted(false);
+      console.log(data);
     } catch (error) {
       console.error('Ошибка при загрузке данных альбома:', error);
     }
@@ -82,89 +81,92 @@ const PlaylistPage = () => {
   };
 
   return (
-    <ScrollArea className='flex-grow px-10'>
-      <div className='flex w-full flex-row gap-6 my-10 h-64'>
-        <img
-          onClick={() => {
-            console.log(user);
-          }}
-          className=' object-cover shadow-xl block aspect-square rounded-md'
-          src={playlist?.picture ? `${BASE_URL}/${playlist.picture}` : ''}
-          alt=''
-        />
-        <div className='h-full flex flex-col pt-14 gap-0.5'>
-          <div className='flex items-end gap-4 justify-between'>
-            <p className='text-3xl font-semibold'>{playlist?.name}</p>
-            <Button
-              onClick={handleDeletePlaylist}
-              variant='destructive'
-              size='icon'
-            >
-              <Trash size={18} />
-            </Button>
-          </div>
-
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button className='w-fit mt-16' size='sm' variant='secondary'>
-                <Pencil className='mr-2 w-4' />
-                <span className='font-bold '>Изменить</span>
+    <ScrollArea className='flex-grow'>
+      <div className='ml-10 mr-4'>
+        <div className='flex w-full flex-row gap-6 my-10 h-64'>
+          <img
+            className=' border-solid border-[1px] border-muted object-cover shadow-xl block aspect-square rounded-md'
+            src={playlist?.picture ? `${BASE_URL}/${playlist.picture}` : ''}
+            alt=''
+          />
+          <div className='h-full flex flex-col pt-14 gap-0.5'>
+            <div className='flex items-end gap-4 justify-between'>
+              <p className='text-3xl font-semibold'>{playlist?.name}</p>
+              <Button
+                onClick={handleDeletePlaylist}
+                variant='destructive'
+                size='icon'
+              >
+                <Trash size={18} />
               </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent className='sm:max-w-[425px]'>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Изменение плейлиста</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Введите новые данные о плейлисте
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <div className='grid gap-4 py-4'>
-                <div className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='name' className='text-right'>
-                    Название
-                  </Label>
-                  <Input {...playlistName} id='name' className='col-span-3' />
-                </div>
-                <div className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='picture' className=' items-start text-right'>
-                    Обложка
-                  </Label>
-                  <Input
-                    className=' text-xs col-span-3 !border-none'
-                    id='picture'
-                    type='file'
-                    accept='image/*'
-                    onChange={handleFileChange}
-                  />
-                </div>
-              </div>
-              <AlertDialogFooter>
-                <AlertDialogAction onClick={handleFormSubmit}>
-                  Изменить
-                </AlertDialogAction>
-                <AlertDialogCancel>Отмена</AlertDialogCancel>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-      </div>
-      <PlaylistSongsHeader />
+            </div>
 
-      <div className='flex flex-col gap-0.5'>
-        {playlist?.tracks && playlist.tracks.length > 0 ? (
-          playlist.tracks.map((track) => (
-            <PlaylistSong
-              key={track._id}
-              track={track}
-              playlistId={playlistId}
-              setDeleted={setDeleted}
-            />
-          ))
-        ) : (
-          <p className='text-center mt-6 text-muted-foreground'>
-            Треков пока что нет🙁
-          </p>
-        )}
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button className='w-fit mt-16' size='sm' variant='secondary'>
+                  <Pencil className='mr-2 w-4' />
+                  <span className='font-bold '>Изменить</span>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent className='sm:max-w-[425px]'>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Изменение плейлиста</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Введите новые данные о плейлисте
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <div className='grid gap-4 py-4'>
+                  <div className='grid grid-cols-4 items-center gap-4'>
+                    <Label htmlFor='name' className='text-right'>
+                      Название
+                    </Label>
+                    <Input {...playlistName} id='name' className='col-span-3' />
+                  </div>
+                  <div className='grid grid-cols-4 items-center gap-4'>
+                    <Label
+                      htmlFor='picture'
+                      className=' items-start text-right'
+                    >
+                      Обложка
+                    </Label>
+                    <Input
+                      className=' text-xs col-span-3 !border-none'
+                      id='picture'
+                      type='file'
+                      accept='image/*'
+                      onChange={handleFileChange}
+                    />
+                  </div>
+                </div>
+                <AlertDialogFooter>
+                  <AlertDialogAction onClick={handleFormSubmit}>
+                    Изменить
+                  </AlertDialogAction>
+                  <AlertDialogCancel>Отмена</AlertDialogCancel>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+        </div>
+        <PlaylistSongsHeader />
+
+        <div className='flex flex-col gap-0.5 '>
+          {playlist?.tracks && playlist.tracks.length > 0 ? (
+            playlist.tracks.map((track) => (
+              <PlaylistSong
+                key={track._id}
+                track={track}
+                playlistId={playlistId}
+                setDeleted={setDeleted}
+                otherPlaylistTracks={playlist.tracks}
+              />
+            ))
+          ) : (
+            <p className='text-center mt-6 text-muted-foreground'>
+              Треков пока что нет🙁
+            </p>
+          )}
+        </div>
       </div>
     </ScrollArea>
   );

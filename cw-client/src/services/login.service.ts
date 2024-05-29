@@ -4,6 +4,7 @@ import {
   IUserLoginData,
   IUserRegisterData,
 } from '@/types/user';
+import { IArtist } from '@/types/artist';
 import axios from 'axios';
 import { BASE_URL } from './constants';
 
@@ -49,5 +50,23 @@ export const LoginService = {
       `${BASE_URL}/users/change/${email}/${username}/${password}/${newPassword}`
     );
     return user;
+  },
+
+  async getSubs(email: string): Promise<IArtist[]> {
+    const response = await axios.get<IArtist[]>(
+      `${BASE_URL}/artists/subs/${email}`
+    );
+    return response.data;
+  },
+
+  async subscribe(artistId: string | undefined, email: string): Promise<void> {
+    await axios.post(`${BASE_URL}/artists/${artistId}/sub/${email}`);
+  },
+
+  async unsubscribe(
+    artistId: string | undefined,
+    email: string
+  ): Promise<void> {
+    await axios.delete(`${BASE_URL}/artists/${artistId}/sub/${email}`);
   },
 };

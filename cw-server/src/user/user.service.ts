@@ -35,13 +35,10 @@ export class UserService {
     newPassword: string,
   ): Promise<User> {
     const salt = genSaltSync(10);
-    console.log(email);
     const user = await this.userModel.findOne({ email });
-    console.log(user.password);
     if (compareSync(password, user.password)) {
       user.password = hashSync(newPassword, salt);
       user.username = username;
-      console.log(user);
       user.save();
       return user;
     } else {

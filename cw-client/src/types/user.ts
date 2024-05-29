@@ -1,3 +1,4 @@
+import { IArtist } from './artist';
 import { IPlaylist } from './playlist';
 
 export interface IUser {
@@ -8,16 +9,17 @@ export interface IUser {
   role: number;
   isBlocked: boolean;
   playlists: IPlaylist[];
+  subscriptions: IArtist[];
 }
 
 export interface IUserLoginData
   extends Omit<
     IUser,
-    '_id' | 'role' | 'playlists' | 'username' | 'isBlocked'
+    '_id' | 'role' | 'playlists' | 'username' | 'isBlocked' | 'subscriptions'
   > {}
 
 export interface IUserRegisterData
-  extends Omit<IUser, '_id' | 'role' | 'playlists'> {}
+  extends Omit<IUser, '_id' | 'role' | 'playlists' | 'subscriptions'> {}
 
 export interface IUserAuthData
   extends Omit<IUser, '_id' | 'role' | 'password'> {}

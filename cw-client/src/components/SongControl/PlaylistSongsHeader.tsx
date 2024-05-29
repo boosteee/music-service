@@ -5,6 +5,7 @@ const PlaylistSongsHeader = () => {
       <p className='w-2/6 flex justify-start'>Альбом</p>
       <p className='w-2/6 flex justify-start'>Исполнитель</p>
       <p className='w-1/6 flex justify-end'>Время</p>
+      <p className='flex ml-11'></p>
     </div>
   );
 };

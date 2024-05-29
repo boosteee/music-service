@@ -71,7 +71,6 @@ const RegisterForm = ({
       email.value
     ) {
       setDisabled(false);
-      console.log(disabled);
     } else {
       setDisabled(true);
     }

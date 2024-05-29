@@ -29,12 +29,19 @@ export class AlbumService {
   }
 
   async getById(albumId: ObjectId): Promise<Album> {
-    return (
-      await this.albumModel
-        .findById(albumId)
-        .populate('artist')
-        .populate('genre')
-    ).populate('tracks');
+    return await this.albumModel
+      .findById(albumId)
+      .populate('artist')
+      .populate('genre')
+      .populate({
+        path: 'tracks',
+        model: Track.name,
+        populate: {
+          path: 'feat',
+          model: Artist.name,
+        },
+      })
+      .exec();
   }
 
   async addGenre(genreName: string): Promise<Genre> {

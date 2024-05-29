@@ -51,7 +51,6 @@ export class AlbumController {
     @Query('query') query: string,
     @Query('genreQuery') genreQuery: string,
   ) {
-    console.log(query);
     return this.albumService.search(query, genreQuery);
   }
 

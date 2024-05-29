@@ -29,7 +29,6 @@ const ArtistDemoPage = () => {
   };
 
   const handleArtistClick = (artistId: string) => {
-    console.log('click');
     navigate(`/artists/${artistId}`);
   };
 

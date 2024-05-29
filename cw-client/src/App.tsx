@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@/components/ThemeProvider';
 import MainLayout from '@/pages/MainLayout';
 import LoginPage from './pages/LoginPage';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import ArtistPage from './pages/ArtistPage';
 import AuthProvider from './components/AuthProvider';
 import AuthenticateProvider from './components/AuthenticateProvider';
@@ -25,11 +25,8 @@ function App() {
             <Route element={<LoginPage />} path='/login' />
             <Route element={<AuthenticateProvider />}>
               <Route element={<MainLayout />} path='/'>
-                <Route
-                  index
-                  element={<LibraryPage />}
-                  path='/playlists'
-                ></Route>
+                <Route index element={<Navigate to='/playlists' />} />
+                <Route element={<LibraryPage />} path='/playlists'></Route>
                 <Route
                   element={<PlaylistPage />}
                   path='/playlists/:playlistId'

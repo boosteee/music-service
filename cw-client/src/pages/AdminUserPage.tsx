@@ -81,7 +81,6 @@ const AdminUserPage = () => {
                   <TableCell className=' w-20 text-right'>
                     <Button
                       onClick={() => {
-                        console.log(user);
                         handleBlockUser(user._id);
                       }}
                       variant='destructive'

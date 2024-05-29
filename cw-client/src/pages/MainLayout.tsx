@@ -15,6 +15,7 @@ const MainLayout = () => {
           <Outlet />
         </div>
       </div>
+
       <Player />
     </>
   );

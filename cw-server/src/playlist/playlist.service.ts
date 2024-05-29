@@ -37,9 +37,7 @@ export class PlaylistService {
     name: string,
     picture: any,
   ): Promise<Playlist> {
-    console.log(playlistId);
     const playlist = await this.playlistModel.findById(playlistId).exec();
-    console.log(await this.playlistModel.find());
     if (!playlist) {
       throw new NotFoundException('Playlist not found');
     }
@@ -63,7 +61,6 @@ export class PlaylistService {
   async getPlaylistByUserEmail(email: string): Promise<Playlist[]> {
     const user = await this.userModel.findOne({ email: email });
     const playlists = await this.playlistModel.find({ user: user.id }).exec();
-
     return playlists;
   }
 
@@ -127,6 +124,16 @@ export class PlaylistService {
         },
       })
       .exec();
+
+    // Перебираем треки и добавляем информацию о feat исполнителях
+    const populatedTracks = await this.trackModel.populate(playlist.tracks, {
+      path: 'feat',
+      model: Artist.name,
+    });
+
+    // Заменяем оригинальные треки в плейлисте на полностью заполненные треки
+    playlist.tracks = populatedTracks;
+
     return playlist;
   }
 }

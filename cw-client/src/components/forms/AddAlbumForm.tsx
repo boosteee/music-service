@@ -83,6 +83,7 @@ const AddAlbumForm: React.FC<AddAlbumFormProps> = ({ setCreated }) => {
       formData.append('year', albumYear.value);
       formData.append('genreId', value);
       formData.append('artistId', artistValue);
+      console.log(artistValue);
       formData.append('name', albumName.value);
       await AlbumService.createAlbum(formData);
       setCreated(true);

@@ -50,6 +50,7 @@ export class AuthService {
       role: user.role,
       username: user.username,
       playlists: user.playlists,
+      subscriptions: user.subscriptions,
     };
   }
 

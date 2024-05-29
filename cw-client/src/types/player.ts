@@ -6,6 +6,7 @@ export interface PlayerState {
   duration: number;
   currentTime: number;
   pause: boolean;
+  audio: HTMLAudioElement;
 }
 
 export enum PlayerActionTypes {

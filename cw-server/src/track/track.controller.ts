@@ -3,9 +3,12 @@ import {
   Controller,
   Delete,
   Get,
+  Header,
   Param,
   Post,
   Query,
+  Req,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -13,6 +16,7 @@ import { CreateTrackDto } from './dto/create-track.dto';
 import { TrackService } from './track.service';
 import { ObjectId } from 'mongoose';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { Response } from 'express';
 
 @Controller('/tracks')
 export class TrackController {
@@ -26,7 +30,6 @@ export class TrackController {
 
   @Get('/search')
   search(@Query('query') query: string) {
-    console.log(query);
     return this.trackService.search(query);
   }
 
@@ -56,5 +59,16 @@ export class TrackController {
   @Delete(':id')
   deleteById(@Param('id') id: ObjectId) {
     return this.trackService.deleteById(id);
+  }
+
+  @Get('/file/audio/:track')
+  @Header('Content-Type', 'audio/mpeg')
+  streamAudio(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Param('track') track: string,
+  ) {
+    const range = req.headers['range'];
+    this.trackService.streamAudioFile(track, range, res);
   }
 }

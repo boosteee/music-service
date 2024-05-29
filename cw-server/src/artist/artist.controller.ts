@@ -38,7 +38,6 @@ export class ArtistController {
 
   @Get('/search')
   search(@Query('query') query: string) {
-    console.log(query);
     return this.artistService.search(query);
   }
 
@@ -55,5 +54,20 @@ export class ArtistController {
   @Delete(':id')
   delete(@Param('id') id: ObjectId) {
     return this.artistService.deleteById(id);
+  }
+
+  @Post(':id/sub/:email')
+  subscribe(@Param('id') id: ObjectId, @Param('email') email: string) {
+    return this.artistService.subscribeUser(id, email);
+  }
+
+  @Delete(':id/sub/:email')
+  unsubscribe(@Param('id') id: ObjectId, @Param('email') email: string) {
+    return this.artistService.unsubscribeUser(id, email);
+  }
+
+  @Get('/subs/:email')
+  getSubscriptions(@Param('email') email: string) {
+    return this.artistService.getSubscriptionsByUserEmail(email);
   }
 }

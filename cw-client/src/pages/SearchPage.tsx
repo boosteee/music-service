@@ -28,7 +28,6 @@ const SearchPage = () => {
   };
 
   const handleTrackClick = (albumId: string) => {
-    console.log('click');
     navigate(`/albums/${albumId}`);
   };
 

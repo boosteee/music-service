@@ -39,7 +39,6 @@ const AdminTrackPage = () => {
 
   useEffect(() => {
     getTrack();
-    console.log(value);
   }, [searchQuery, value, created]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {

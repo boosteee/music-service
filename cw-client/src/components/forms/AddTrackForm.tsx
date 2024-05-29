@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { AddAlbumFormProps } from './AddAlbumForm';
 import {
   AlertDialog,
@@ -30,8 +30,15 @@ import { ITrack } from '@/types/track';
 import { TrackService } from '@/services/track.service';
 import { AlbumService } from '@/services/album.service';
 import { useInput } from '@/hooks/useInput';
+import { IArtist } from '@/types/artist';
+import { ArtistService } from '@/services/artist.service';
+import MultipleSelector, {
+  MultipleSelectorRef,
+  Option,
+} from '@/components/ui/multiple-selector';
 
 const AddTrackForm: React.FC<AddAlbumFormProps> = ({ setCreated }) => {
+  const [artists, setArtists] = useState<IArtist[]>([]);
   const [, setTracks] = useState<ITrack[]>([]);
   const [albums, setAlbums] = useState<IAlbum[]>([]);
   const [value, setValue] = useState('');
@@ -44,6 +51,13 @@ const AddTrackForm: React.FC<AddAlbumFormProps> = ({ setCreated }) => {
       const file = files[0];
       setSelectedFile(file);
     }
+  };
+
+  const multipleSelectorRef = useRef<MultipleSelectorRef>(null);
+
+  const getArtists = async () => {
+    const data = await ArtistService.getAllArtist();
+    setArtists(data);
   };
 
   const getTracks = async () => {
@@ -59,14 +73,35 @@ const AddTrackForm: React.FC<AddAlbumFormProps> = ({ setCreated }) => {
 
   useEffect(() => {
     getTracks();
+    getArtists();
   }, []);
 
+  const convertToOptions = (artists: IArtist[]): Option[] => {
+    return artists.map((artist) => ({
+      value: artist._id,
+      label: artist.name,
+    }));
+  };
+
+  const artistOptions = convertToOptions(artists);
+
   const handleCreateTrack = async () => {
-    if (trackName.value && selectedFile && value) {
+    if (
+      trackName.value &&
+      multipleSelectorRef.current &&
+      selectedFile &&
+      value
+    ) {
+      const selectedValue = multipleSelectorRef.current.selectedValue;
+      const formatFeat = selectedValue.map((item) => item.value);
       const formData = new FormData();
       formData.append('name', trackName.value);
       formData.append('albumId', value);
       formData.append('track', selectedFile);
+      for (let i = 0; i < formatFeat.length; i++) {
+        formData.append('feat[]', formatFeat[i]);
+        console.log(formatFeat[i]);
+      }
       await TrackService.createTrack(formData);
       setCreated(true);
     } else {
@@ -95,6 +130,7 @@ const AddTrackForm: React.FC<AddAlbumFormProps> = ({ setCreated }) => {
             </Label>
             <Input {...trackName} id='name' className='col-span-3' />
           </div>
+
           <div className='grid grid-cols-4 items-center gap-4'>
             <Label className='items-start text-right'>Альбом</Label>
             <Popover open={open} onOpenChange={setOpen}>
@@ -138,6 +174,23 @@ const AddTrackForm: React.FC<AddAlbumFormProps> = ({ setCreated }) => {
                 </Command>
               </PopoverContent>
             </Popover>
+          </div>
+          <div className='flex items-center gap-4'>
+            <Label htmlFor='name' className='ml-14 text-right'>
+              Фит
+            </Label>
+            <MultipleSelector
+              ref={multipleSelectorRef}
+              hidePlaceholderWhenSelected={true}
+              selectFirstItem={false}
+              defaultOptions={artistOptions}
+              placeholder='Выберите исполнителя...'
+              emptyIndicator={
+                <p className='text-center text-sm leading-4 text-gray-600 dark:text-gray-400'>
+                  Исполнитель не найден
+                </p>
+              }
+            />
           </div>
         </div>
         <div className='grid grid-cols-4 items-center gap-4'>

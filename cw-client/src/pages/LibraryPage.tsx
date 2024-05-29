@@ -20,6 +20,8 @@ import { Label } from '../components/ui/label';
 import { Input } from '../components/ui/input';
 import { useInput } from '@/hooks/useInput';
 import { LoginService } from '@/services/login.service';
+import { IArtist } from '@/types/artist';
+import ArtistCard from '@/components/ArtistCard';
 
 const LibraryPage = () => {
   const navigate = useNavigate();
@@ -27,7 +29,12 @@ const LibraryPage = () => {
     navigate(`/playlists/${playlistId}`);
   };
 
+  const handleArtistClick = (artistId: string) => {
+    navigate(`/artists/${artistId}`);
+  };
+
   const [playlists, setPlaylists] = useState<IPlaylist[]>([]);
+  const [subArtists, setSubArtists] = useState<IArtist[]>([]);
 
   const loggedUser = JSON.parse(localStorage.getItem('user') ?? '{}');
 
@@ -44,8 +51,17 @@ const LibraryPage = () => {
     setPlaylists(data);
   };
 
+  const getSubscriptions = async () => {
+    if (!user.email) {
+      return;
+    }
+    const data = await LoginService.getSubs(user.email);
+    setSubArtists(data);
+  };
+
   useMemo(() => {
     getPlaylist();
+    getSubscriptions();
   }, []);
 
   const playlistName = useInput('');
@@ -131,12 +147,12 @@ const LibraryPage = () => {
         </AlertDialog>
       </div>
 
-      <p className='px-10 text-xl font-semibold mb-5 text-muted-foreground'>
+      <p className='px-10 text-xl font-semibold mt-4 mb-5 text-muted-foreground'>
         Плейлисты
       </p>
 
       <ScrollArea className='w-[calc(100vw-18rem)] pb-4'>
-        <div className='mx-10 flex gap-6'>
+        <div className='mx-10 flex gap-8'>
           {playlists && playlists.length > 0 ? (
             playlists.map((playlist) => (
               <PlaylistCard
@@ -150,6 +166,31 @@ const LibraryPage = () => {
           ) : (
             <p className='text-center text-sm text-muted-foreground'>
               У вас пока нет плейлистов🙁
+            </p>
+          )}
+        </div>
+        <ScrollBar orientation='horizontal' />
+      </ScrollArea>
+
+      <p className='px-10 text-xl font-semibold mt-4 mb-5 text-muted-foreground'>
+        Подписки на исполнителей
+      </p>
+
+      <ScrollArea className='w-[calc(100vw-18rem)] pb-4'>
+        <div className='mx-10 flex gap-8'>
+          {subArtists && subArtists.length > 0 ? (
+            subArtists.map((artist) => (
+              <ArtistCard
+                onClick={() => {
+                  handleArtistClick(artist._id);
+                }}
+                key={artist._id}
+                artist={artist}
+              />
+            ))
+          ) : (
+            <p className='text-center text-sm text-muted-foreground'>
+              У вас пока нет подписок🙁
             </p>
           )}
         </div>

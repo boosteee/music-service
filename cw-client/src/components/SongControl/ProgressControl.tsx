@@ -10,15 +10,19 @@ const ProgressControl: React.FC<TrackProgressProps> = ({
 }) => {
   return (
     <div className='flex flex-row gap-3 w-full items-center'>
-      <span className='text-sm'>{formatTime(left)}</span>
+      <span className='text-xs font-semibold tabular-nums text-muted-foreground'>
+        {formatTime(left)}
+      </span>
       <Slider
         min={0}
         max={right}
         value={[left]}
         onValueChange={onChange}
-        className='h-1'
+        className='h-1 hover:cursor-pointer'
       />
-      <span className='text-sm'>{formatTime(right)}</span>
+      <span className='text-xs font-semibold tabular-nums text-muted-foreground'>
+        {formatTime(right)}
+      </span>
     </div>
   );
 };

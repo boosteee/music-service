@@ -27,47 +27,51 @@ const AlbumPage = () => {
   }, [albumId]);
 
   const handleArtistClick = (artistId: string | undefined) => {
-    console.log('click');
     navigate(`/artists/${artistId}`);
   };
 
-  console.log(album);
   return (
-    <ScrollArea className='flex-grow px-10'>
-      <div className='flex flex-row gap-6 my-10 h-64'>
-        <img
-          className='object-cover shadow-xl block aspect-square rounded-md'
-          src={album?.picture ? `${BASE_URL}/${album.picture}` : ''}
-          alt='hello'
-        />
-        <div className='h-full flex flex-col gap-0.5 pt-14'>
-          <p className='text-3xl font-semibold'>{album?.name}</p>
-          <Button
-            onClick={() => {
-              handleArtistClick(album?.artist._id);
-            }}
-            className='p-0 w-fit font-normal text-2xl text-muted-foreground'
-            variant='link'
-          >
-            {album?.artist.name}
-          </Button>
-          <p className=' text-xs font-bold'>
-            <span className='uppercase'>{album?.genre.name}</span>
-            <span>•</span>
-            <span>{album?.year}</span>
-          </p>
+    <ScrollArea className='flex-grow'>
+      <div className='ml-10 mr-4'>
+        <div className='flex flex-row gap-6 my-10 h-64 '>
+          <img
+            className='object-cover shadow-xl block aspect-square rounded-md'
+            src={album?.picture ? `${BASE_URL}/${album.picture}` : ''}
+          />
+          <div className='h-full flex flex-col gap-0.5 pt-14'>
+            <p className='text-3xl font-semibold'>{album?.name}</p>
+            <Button
+              onClick={() => {
+                handleArtistClick(album?.artist._id);
+              }}
+              className='p-0 w-fit font-normal text-2xl text-muted-foreground'
+              variant='link'
+            >
+              {album?.artist.name}
+            </Button>
+            <p className=' text-xs font-bold'>
+              <span className='uppercase'>{album?.genre.name}</span>
+              <span>•</span>
+              <span>{album?.year}</span>
+            </p>
+          </div>
         </div>
-      </div>
-      <div className='flex flex-col gap-0.5'>
-        {album?.tracks && album?.tracks.length > 0 ? (
-          album?.tracks.map((track) => (
-            <AlbumSong key={track._id} track={track} />
-          ))
-        ) : (
-          <p className='text-center text-sm text-muted-foreground'>
-            Треков пока что нет🙁
-          </p>
-        )}
+        <div className='flex flex-col gap-0.5 '>
+          {album?.tracks && album?.tracks.length > 0 ? (
+            album?.tracks.map((track) => (
+              <AlbumSong
+                key={track._id}
+                track={track}
+                otherAlbumTracks={album.tracks}
+                albumId={album._id}
+              />
+            ))
+          ) : (
+            <p className='text-center text-sm text-muted-foreground'>
+              Треков пока что нет🙁
+            </p>
+          )}
+        </div>
       </div>
     </ScrollArea>
   );

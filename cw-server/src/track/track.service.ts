@@ -1,17 +1,20 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { Response } from 'express';
 import { Track } from './schemas/track.schema';
 import { Model, ObjectId } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { Album } from 'src/album/schemas/album.schema';
-import { Artist } from 'src/artist/schemas/artist.schema';
 import { Playlist } from 'src/playlist/schemas/playlist.schema';
 import { FileService, FileType } from 'src/file/file.service';
-import { Role } from 'src/decorators/role.decorator';
-import { Roles } from 'src/user/schemas/user.schema';
+import * as path from 'path';
+import { getAudioDurationInSeconds } from 'get-audio-duration';
+import { join } from 'path';
+import { createReadStream, statSync } from 'fs';
 
 @Injectable()
 export class TrackService {
+  private readonly CHUNK_SIZE: number = 524288;
   constructor(
     @InjectModel(Track.name) private trackModel: Model<Track>,
     @InjectModel(Album.name) private albumModel: Model<Album>,
@@ -20,18 +23,21 @@ export class TrackService {
   ) {}
 
   async addTrack(dto: CreateTrackDto, audio: any): Promise<Track> {
-    console.log(audio);
     const audioPath = this.fileService.createFile(FileType.AUDIO, audio);
+    const filePath = path.resolve(__dirname, '..', '..', 'static', audioPath);
+    const durationInSeconds = await getAudioDurationInSeconds(filePath);
     const album = await this.albumModel.findById(dto.albumId);
     const track = await this.trackModel.create({
       ...dto,
       album: dto.albumId,
       track: audioPath,
+      duration: Math.ceil(durationInSeconds),
+      feat: dto.feat,
     });
-    console.log(audioPath);
-    console.log(track);
+
     album.tracks.push(track.id);
     await Promise.all([track.save(), album.save()]);
+
     return track;
   }
 
@@ -43,8 +49,8 @@ export class TrackService {
       .populate({
         path: 'album',
         populate: {
-          path: 'artist', // Предполагается, что у вас есть связь между альбомом и исполнителем с именем "artist"
-          model: 'Artist', // Замените 'Artist' на фактическую модель исполнителя
+          path: 'artist',
+          model: 'Artist',
         },
       });
 
@@ -99,12 +105,57 @@ export class TrackService {
           model: 'Artist',
         },
       })
+      .populate({
+        path: 'feat',
+        model: 'Artist',
+      })
       .exec();
 
     if (!track) {
       throw new NotFoundException('Track not found');
     }
-
     return track;
+  }
+
+  streamAudioFile(track: string, range: string | undefined, res: Response) {
+    const filePath = join(process.cwd(), 'static', 'audio', track);
+    const stat = statSync(filePath);
+    const fileSize = stat.size;
+
+    if (range) {
+      const parts = range.replace(/bytes=/, '').split('-');
+      const start = parseInt(parts[0], 10);
+      let end = parts[1] ? parseInt(parts[1], 10) : start + this.CHUNK_SIZE - 1;
+
+      end = Math.min(end, start + this.CHUNK_SIZE - 1, fileSize - 1);
+
+      if (start >= fileSize) {
+        res
+          .status(HttpStatus.REQUESTED_RANGE_NOT_SATISFIABLE)
+          .send(
+            'Requested range not satisfiable\n' + start + ' >= ' + fileSize,
+          );
+        return;
+      }
+
+      const chunksize = end - start + 1;
+      const file = createReadStream(filePath, { start, end });
+      const head = {
+        'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+        'Accept-Ranges': 'bytes',
+        'Content-Length': chunksize,
+        'Content-Type': 'audio/mpeg',
+      };
+
+      res.writeHead(HttpStatus.PARTIAL_CONTENT, head);
+      file.pipe(res);
+    } else {
+      const head = {
+        'Content-Length': fileSize,
+        'Content-Type': 'audio/mpeg',
+      };
+      res.writeHead(HttpStatus.OK, head);
+      createReadStream(filePath).pipe(res);
+    }
   }
 }

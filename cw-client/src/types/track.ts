@@ -7,7 +7,9 @@ export interface ITrack {
   name: string;
   album: IAlbum;
   playlists: IPlaylist[];
+  duration: number;
   track: string;
+  feat: IArtist[];
 }
 
 export interface IArtistTrack extends ITrack {

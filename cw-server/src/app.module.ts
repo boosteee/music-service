@@ -23,8 +23,11 @@ import { ConfigModule } from '@nestjs/config';
     PlaylistModule,
     AlbumModule,
     ArtistModule,
+    // MongooseModule.forRoot(
+    //   'mongodb+srv://admin:admin@musicservice.iewbbmz.mongodb.net/?retryWrites=true&w=majority',
+    // ),
     MongooseModule.forRoot(
-      'mongodb+srv://admin:admin@musicservice.iewbbmz.mongodb.net/?retryWrites=true&w=majority',
+      'mongodb+srv://caraby9:ewbmmEJfZcv1MlWA@musicservice.xkyvjqv.mongodb.net/?retryWrites=true&w=majority&appName=MusicService',
     ),
     AuthModule,
   ],

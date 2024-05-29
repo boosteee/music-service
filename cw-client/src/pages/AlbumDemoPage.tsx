@@ -10,7 +10,6 @@ const AlbumDemoPage = () => {
   const navigate = useNavigate();
 
   const handleAlbumClick = (albumId: string) => {
-    console.log('click');
     navigate(`/albums/${albumId}`);
   };
 

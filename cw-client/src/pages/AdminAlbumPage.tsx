@@ -56,7 +56,6 @@ const AdminAlbumPage = () => {
 
   useEffect(() => {
     getAlbum();
-    console.log(value);
   }, [searchQuery, value, created]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {

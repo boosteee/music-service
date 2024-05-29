@@ -44,7 +44,7 @@ export function Menu() {
     navigate('/login');
   }
   const { user } = loggedUser;
-  console.log('Privet', user);
+  console.log('Hello', user);
 
   const logOut = () => {
     localStorage.removeItem('user');
@@ -57,7 +57,6 @@ export function Menu() {
 
   const changeUser = async () => {
     try {
-      console.log(user);
       const data = await LoginService.changeUser(
         user.email,
         username.value,
